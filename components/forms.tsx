@@ -1,27 +1,41 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { CheckCircle2, LoaderCircle } from "lucide-react";
+import { AlertCircle, CheckCircle2, LoaderCircle } from "lucide-react";
 
-type FormState = "idle" | "sending" | "success";
+type FormState = "idle" | "sending" | "success" | "error";
 
 function SubmitButton({ state, children }: { state: FormState; children: React.ReactNode }) {
-  return <button className="button button-gold form-submit" disabled={state !== "idle"} type="submit">
+  return <button className="button button-gold form-submit" disabled={state === "sending"} type="submit">
     {state === "sending" && <LoaderCircle size={17} className="spin" />}{state === "success" ? "Request received" : children}
   </button>;
 }
 
 export function AppointmentForm({ onSuccess }: { onSuccess?: () => void }) {
   const [state, setState] = useState<FormState>("idle");
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     if (!form.checkValidity()) return;
     setState("sending");
-    window.setTimeout(() => { setState("success"); form.reset(); onSuccess?.(); }, 700);
+    try {
+      const payload = Object.fromEntries(new FormData(form).entries());
+      const response = await fetch("/api/appointments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error("Appointment submission failed.");
+      setState("success");
+      form.reset();
+      onSuccess?.();
+    } catch {
+      setState("error");
+    }
   }
   if (state === "success") return <div className="form-success" role="status"><CheckCircle2 /><div><strong>Thank you.</strong><p>We have received your appointment request and will contact you to confirm the schedule.</p></div></div>;
   return <form className="form-grid" onSubmit={submit}>
+    <label className="form-honeypot" aria-hidden="true">Company website<input name="company" tabIndex={-1} autoComplete="off" /></label>
     <label>Full name<input name="name" required autoComplete="name" /></label>
     <label>Phone number<input name="phone" required autoComplete="tel" inputMode="tel" /></label>
     <label>Email address<input name="email" required type="email" autoComplete="email" /></label>
@@ -33,7 +47,7 @@ export function AppointmentForm({ onSuccess }: { onSuccess?: () => void }) {
     <label>Service interested in<select name="service" required defaultValue=""><option value="" disabled>Select a service</option><option>Whole-home consultation</option><option>Single-room consultation</option><option>Space planning</option><option>Color & material guidance</option><option>Furniture & product selection</option><option>Décor & styling</option></select></label>
     <fieldset><legend>Is construction completed?</legend><label className="radio"><input name="complete" type="radio" value="yes" required /> Yes</label><label className="radio"><input name="complete" type="radio" value="no" /> No</label></fieldset>
     <label className="full">How can we help?<textarea name="message" required rows={4} placeholder="Tell us about your home, priorities and the decisions you are considering." /></label>
-    <div className="full"><SubmitButton state={state}>Send appointment request</SubmitButton><p className="form-note">This sends a request only. Our team will contact you to confirm the appointment.</p></div>
+    <div className="full"><SubmitButton state={state}>Send appointment request</SubmitButton><p className="form-note">This sends a request only. Our team will contact you to confirm the appointment.</p>{state === "error" && <p className="form-error" role="alert"><AlertCircle size={16} />We could not send your request. Please check your connection and try again.</p>}</div>
   </form>;
 }
 
