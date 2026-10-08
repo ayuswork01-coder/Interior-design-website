@@ -1,0 +1,4 @@
+import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/shared";
+export const metadata: Metadata = { title: "Terms & Conditions" };
+export default function Terms(){ return <main id="main-content" className="legal-page"><Breadcrumbs current="Terms & Conditions"/><h1>Terms & conditions</h1><p className="legal-note">Draft placeholder — review with qualified counsel and replace before public launch.</p><h2>Services</h2><p>Services relate to interior design consultation, styling, space planning and product recommendations. They do not include structural construction or engineering services.</p><h2>Appointment requests</h2><p>Submitting a request does not confirm an appointment. A schedule is confirmed only after direct communication from the business.</p><h2>Products</h2><p>Product pricing, availability, materials and dimensions must be confirmed before purchase or commitment.</p></main> }

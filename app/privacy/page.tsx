@@ -1,0 +1,4 @@
+import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/shared";
+export const metadata: Metadata = { title: "Privacy Policy" };
+export default function Privacy(){ return <main id="main-content" className="legal-page"><Breadcrumbs current="Privacy Policy"/><h1>Privacy policy</h1><p className="legal-note">Draft placeholder — review with qualified counsel and replace before public launch.</p><h2>Information we collect</h2><p>When you submit a contact or appointment form, we may collect the contact and property details you provide so we can respond to your request.</p><h2>How information is used</h2><p>Information should be used only to communicate about requested services, arrange consultations and maintain relevant business records.</p><h2>Contact</h2><p>Questions about privacy can be sent to [EMAIL ADDRESS].</p></main> }
