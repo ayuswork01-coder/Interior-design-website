@@ -22,10 +22,26 @@ const appointmentSchema = z.object({
     "Furniture & product selection",
     "Décor & styling",
   ]),
-  complete: z.enum(["yes", "no"]),
+  complete: z.preprocess(
+    (value) => typeof value === "string" ? value.trim().toLowerCase() : value,
+    z.enum(["yes", "no"]),
+  ),
   message: z.string().trim().min(10).max(3000),
-  company: z.string().max(0).optional().default(""),
 });
+
+const fieldLabels: Record<string, string> = {
+  name: "full name",
+  phone: "phone number",
+  email: "email address",
+  location: "home location",
+  date: "preferred date",
+  time: "preferred time",
+  property: "property type",
+  size: "approximate size",
+  service: "service",
+  complete: "construction status",
+  message: "project description",
+};
 
 function escapeHtml(value: string) {
   return value.replace(/[&<>"']/g, (character) => ({
@@ -53,7 +69,14 @@ export async function POST(request: Request) {
 
   const parsed = appointmentSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: "Please check the appointment details and try again." }, { status: 400 });
+    const fields = [...new Set(parsed.error.issues
+      .map((issue) => issue.path[0])
+      .filter((field): field is string => typeof field === "string")
+      .map((field) => fieldLabels[field] ?? field))];
+    const error = fields.length > 0
+      ? `Please check the following fields: ${fields.join(", ")}.`
+      : "Please check the appointment details and try again.";
+    return NextResponse.json({ error }, { status: 400 });
   }
 
   const appointment = parsed.data;
