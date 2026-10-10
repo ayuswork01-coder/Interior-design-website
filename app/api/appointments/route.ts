@@ -161,9 +161,9 @@ export async function POST(request: Request) {
       from,
       to: [to],
       replyTo: appointment.email,
-      subject: `New appointment request from ${appointment.name}`,
+      subject: `New Velora Interiors appointment request from ${appointment.name}`,
       html: `
-          <h1>New appointment request</h1>
+          <h1>New appointment request — Velora Interiors</h1>
           <p><strong>Reference:</strong> ${id}</p>
           <p><strong>Name:</strong> ${safe.name}</p>
           <p><strong>Phone:</strong> ${safe.phone}</p>
@@ -178,7 +178,7 @@ export async function POST(request: Request) {
           <p><strong>Message:</strong><br>${safe.message.replace(/\n/g, "<br>")}</p>
         `,
       text: [
-          "New appointment request",
+          "New appointment request — Velora Interiors",
           `Reference: ${id}`,
           `Name: ${appointment.name}`,
           `Phone: ${appointment.phone}`,

@@ -1,5 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="12" fill="#14221d"/>
-  <path d="M32 10 54 32 32 54 10 32Z" fill="none" stroke="#c7a568" stroke-width="2"/>
-  <text x="32" y="41" text-anchor="middle" font-family="Georgia,serif" font-size="29" fill="#f5f0e7">S</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Velora Interiors V monogram">
+  <rect width="64" height="64" rx="12" fill="#1B1B1B"/>
+  <g fill="none" stroke="#D4AF7C" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M13 10 30 53 48 10" stroke-width="4"/>
+    <path d="M20 10 32 42" stroke-width="2"/>
+    <path d="M30 49c6-13 14-18 24-20-4 10-11 18-23 21" fill="#D4AF7C" stroke-width="1"/>
+    <path d="M32 47c6-6 13-10 20-15" stroke="#1B1B1B" stroke-width="1"/>
+  </g>
 </svg>

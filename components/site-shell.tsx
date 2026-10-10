@@ -28,7 +28,7 @@ export function Header() {
   return <>
     <header className={`site-header ${scrolled ? "is-scrolled" : ""}`}>
       <div className="nav-wrap">
-        <Link href="/" className="brand" aria-label="Studio Name home"><span className="brand-mark">S</span><span><strong>STUDIO NAME</strong><small>INTERIORS • NEPAL</small></span></Link>
+        <Link href="/" className="brand" aria-label="Velora Interiors home"><img className="brand-logo" src="/velora-logo-on-dark.svg" alt="Velora Interiors" width="360" height="92" /></Link>
         <nav className="desktop-nav" aria-label="Main navigation">{nav.map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}</nav>
         <button className="button button-gold desktop-book" onClick={() => setBooking(true)}>Book an appointment</button>
         <button className="menu-button" aria-label="Open menu" aria-expanded={menu} onClick={() => setMenu(true)}><Menu /></button>
@@ -55,12 +55,12 @@ export function Header() {
 export function Footer() {
   return <footer className="site-footer">
     <div className="footer-main">
-      <div className="footer-brand"><div className="brand light"><span className="brand-mark">S</span><span><strong>STUDIO NAME</strong><small>INTERIORS • NEPAL</small></span></div><p>A placeholder brand for a Nepal-based interior design consultation and product studio. Replace with your business name.</p><a className="social" href="#" aria-label="Instagram placeholder"><Camera size={18} /> Instagram placeholder</a></div>
+      <div className="footer-brand"><div className="brand light"><img className="brand-logo" src="/velora-logo-on-dark.svg" alt="Velora Interiors" width="360" height="92" /></div><p>Interior design consultation, space planning, styling guidance and curated interior products for completed homes in Nepal.</p><a className="social" href="#" aria-label="Velora Interiors on Instagram"><Camera size={18} /> Instagram</a></div>
       <div><h3>Navigate</h3>{nav.map(([label, href]) => <Link key={href} href={href}>{label}</Link>)}</div>
       <div><h3>Services</h3><Link href="/services">Interior consultation</Link><Link href="/services#space-planning">Space planning</Link><Link href="/services#color-consultation">Color consultation</Link><Link href="/services#furniture-placement">Furniture placement</Link></div>
-      <div><h3>Contact</h3><p>[PHONE NUMBER]</p><p>[TELEPHONE NUMBER]</p><p>[WHATSAPP NUMBER]</p><p>[EMAIL ADDRESS]</p><p>[CITY, NEPAL]</p></div>
+      <div><h3>Contact</h3><p>[PHONE NUMBER]</p><p>[TELEPHONE NUMBER]</p><p>[WHATSAPP NUMBER]</p><p><a href="mailto:ayuswork01@gmail.com">ayuswork01@gmail.com</a></p><p>[CITY, NEPAL]</p></div>
     </div>
-    <div className="footer-bottom"><span>© {new Date().getFullYear()} [BUSINESS NAME]. All rights reserved.</span><div><Link href="/privacy">Privacy policy</Link><Link href="/terms">Terms & conditions</Link></div></div>
+    <div className="footer-bottom"><span>© {new Date().getFullYear()} Velora Interiors. All rights reserved.</span><div><Link href="/privacy">Privacy policy</Link><Link href="/terms">Terms & conditions</Link></div></div>
   </footer>;
 }
 
