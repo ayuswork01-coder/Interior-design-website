@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { SiteShell } from "@/components/site-shell";
+import { MotionEffects } from "@/components/motion-effects";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://nepal-interior-design-studio.sites.openai.com"),
@@ -16,5 +17,5 @@ export const metadata: Metadata = {
 const schema = { "@context": "https://schema.org", "@type": "ProfessionalService", name: "Velora Interiors", description: "Interior design consultation, styling, space planning and interior product guidance for homeowners in Nepal.", areaServed: "Nepal", address: { "@type": "PostalAddress", addressLocality: "[CITY]", addressCountry: "NP" }, telephone: "[PHONE NUMBER]", email: "ayuswork01@gmail.com" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body><a className="skip-link" href="#main-content">Skip to content</a><SiteShell>{children}</SiteShell><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} /></body></html>;
+  return <html lang="en"><body><a className="skip-link" href="#main-content">Skip to content</a><MotionEffects /><SiteShell>{children}</SiteShell><script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} /></body></html>;
 }
