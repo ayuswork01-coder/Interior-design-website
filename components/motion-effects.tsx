@@ -66,6 +66,20 @@ export function MotionEffects() {
     let frame = 0;
     let parallaxFrame = 0;
     let observer: IntersectionObserver | undefined;
+    let revealTargets: HTMLElement[] = [];
+    let visibilityFailsafe = 0;
+
+    const revealVisibleTargets = () => {
+      const viewportHeight = window.innerHeight;
+      revealTargets.forEach((element) => {
+        if (element.classList.contains("is-visible")) return;
+        const rect = element.getBoundingClientRect();
+        if (rect.top <= viewportHeight * 0.92 && rect.bottom >= viewportHeight * 0.08) {
+          element.classList.add("is-visible");
+          observer?.unobserve(element);
+        }
+      });
+    };
 
     frame = window.requestAnimationFrame(() => {
       individualTargets.forEach(([selector, variant]) => {
@@ -80,9 +94,9 @@ export function MotionEffects() {
         });
       });
 
-      const targets = document.querySelectorAll<HTMLElement>(".motion-reveal");
+      revealTargets = Array.from(document.querySelectorAll<HTMLElement>(".motion-reveal"));
       if (!("IntersectionObserver" in window)) {
-        targets.forEach((element) => element.classList.add("is-visible"));
+        revealTargets.forEach((element) => element.classList.add("is-visible"));
         root.classList.add("motion-enhanced");
         return;
       }
@@ -95,23 +109,26 @@ export function MotionEffects() {
         });
       }, { rootMargin: "0px 0px -10% 0px", threshold: 0.12 });
 
-      targets.forEach((element) => {
+      revealTargets.forEach((element) => {
         observer?.observe(element);
-        const rect = element.getBoundingClientRect();
-        if (rect.top <= window.innerHeight * 0.92 && rect.bottom >= 0) {
-          element.classList.add("is-visible");
-          observer?.unobserve(element);
-        }
       });
       root.classList.add("motion-enhanced");
+      revealVisibleTargets();
+
+      // Animations must never make content permanently unavailable if a browser
+      // delays or drops an observer callback (for example during scroll restore).
+      visibilityFailsafe = window.setTimeout(() => {
+        revealTargets.forEach((element) => element.classList.add("is-visible"));
+      }, 12000);
     });
 
     const parallaxTargets = Array.from(document.querySelectorAll<HTMLElement>(
       ".home-hero, .page-hero, .editorial-image, .product-feature, .story-image",
     ));
 
-    const updateParallax = () => {
+    const updateViewportEffects = () => {
       parallaxFrame = 0;
+      revealVisibleTargets();
       const viewportHeight = window.innerHeight;
       parallaxTargets.forEach((element) => {
         const rect = element.getBoundingClientRect();
@@ -123,19 +140,22 @@ export function MotionEffects() {
 
     const requestParallax = () => {
       if (parallaxFrame) return;
-      parallaxFrame = window.requestAnimationFrame(updateParallax);
+      parallaxFrame = window.requestAnimationFrame(updateViewportEffects);
     };
 
-    updateParallax();
+    updateViewportEffects();
     window.addEventListener("scroll", requestParallax, { passive: true });
     window.addEventListener("resize", requestParallax, { passive: true });
+    window.addEventListener("pageshow", requestParallax);
 
     return () => {
       window.cancelAnimationFrame(frame);
       if (parallaxFrame) window.cancelAnimationFrame(parallaxFrame);
+      if (visibilityFailsafe) window.clearTimeout(visibilityFailsafe);
       observer?.disconnect();
       window.removeEventListener("scroll", requestParallax);
       window.removeEventListener("resize", requestParallax);
+      window.removeEventListener("pageshow", requestParallax);
     };
   }, [pathname]);
 
